@@ -38,6 +38,44 @@ GET https://cep-weather-XXXXXXXXXX-uc.a.run.app/01310100
 - [Docker](https://docs.docker.com/get-docker/) (optional)
 - A free [WeatherAPI](https://www.weatherapi.com/) key
 
+### ⚡ Quick Start — 3 Steps (2 min)
+
+**1. Clone and navigate:**
+```bash
+git clone https://github.com/joaogarbeline/cep-weather.git
+cd cep-weather
+```
+
+**2. Set your API key (choose your shell):**
+
+PowerShell:
+```powershell
+$env:WEATHER_API_KEY = "your_key_api"
+# For permanent setup (new shell required):
+setx WEATHER_API_KEY "your_key_api"
+```
+
+Bash/Mac/Linux:
+```bash
+export WEATHER_API_KEY=your_key_api
+```
+
+**3. Run and test:**
+```bash
+# Terminal 1: Start server (keeps running on port 8080)
+go run ./cmd/server
+
+# Terminal 2: Test the API
+curl http://localhost:8080/01310100
+```
+
+**Expected response:**
+```json
+{"temp_C":19,"temp_F":66.2,"temp_K":292}
+```
+
+---
+
 ### Option 1 — Go directly
 
 ```bash
@@ -46,7 +84,7 @@ git clone https://github.com/joaogarbeline/cep-weather.git
 cd cep-weather
 
 # Set your API key
-export WEATHER_API_KEY=your_api_key
+export WEATHER_API_KEY=your_key_api
 
 # Run the server
 go run ./cmd/server
@@ -62,7 +100,7 @@ curl http://localhost:8080/01310100
 docker build -t cep-weather .
 
 # Run the container
-docker run -p 8080:8080 -e WEATHER_API_KEY=your_api_key cep-weather
+docker run -p 8080:8080 -e WEATHER_API_KEY=your_key_api cep-weather
 
 # Test it
 curl http://localhost:8080/01310100
@@ -73,7 +111,7 @@ curl http://localhost:8080/01310100
 ```bash
 # Copy and fill in your API key
 cp .env.example .env
-# Edit .env and set WEATHER_API_KEY=your_api_key
+# Edit .env and set WEATHER_API_KEY=your_key_api
 
 # Start the service
 docker-compose up --build
@@ -86,17 +124,28 @@ curl http://localhost:8080/01310100
 
 ## 🧪 Running Tests
 
+**All tests (no API key required):**
 ```bash
-# Run all tests
 go test ./... -v
+```
 
-# Run with coverage report
+**With coverage report:**
+```bash
 go test ./... -coverprofile=coverage.out
 go tool cover -html=coverage.out
+```
 
-# Or using Make
-make test
-make test-cover
+**By package:**
+```bash
+go test ./internal/handler -v       # HTTP handler tests
+go test ./internal/service -v       # Business logic tests
+go test ./internal/integration -v   # Integration tests
+```
+
+**Using Make:**
+```bash
+make test              # Run all tests
+make test-cover        # Run with coverage report
 ```
 
 ### Test coverage includes:
@@ -130,7 +179,7 @@ chmod +x deploy.sh
 
 ```bash
 export PROJECT_ID=my-gcp-project-id
-export WEATHER_API_KEY=your_api_key
+export WEATHER_API_KEY=your_key_api
 export SERVICE_NAME=cep-weather
 export REGION=us-central1
 export IMAGE=gcr.io/${PROJECT_ID}/${SERVICE_NAME}
@@ -159,23 +208,25 @@ gcloud run deploy ${SERVICE_NAME} \
 cep-weather/
 ├── cmd/
 │   └── server/
-│       └── main.go          # Entry point
+│       └── main.go              # Entry point
 ├── internal/
 │   ├── client/
-│   │   ├── viacep.go        # ViaCEP API client
-│   │   └── weatherapi.go    # WeatherAPI client
+│   │   ├── viacep.go            # ViaCEP API client
+│   │   └── weatherapi.go        # WeatherAPI client
 │   ├── handler/
-│   │   ├── handler.go       # HTTP handler
-│   │   └── handler_test.go  # Handler unit tests
-│   └── service/
-│       ├── weather.go       # Business logic + conversions
-│       └── weather_test.go  # Service unit tests
-├── test/
-│   └── integration_test.go  # Integration tests
+│   │   ├── handler.go           # HTTP handler
+│   │   └── handler_test.go      # Handler unit tests
+│   ├── service/
+│   │   ├── weather.go           # Business logic + conversions
+│   │   └── weather_test.go      # Service unit tests
+│   └── integration/
+│       └── integration_test.go  # Integration tests
 ├── Dockerfile
 ├── docker-compose.yml
 ├── deploy.sh
 ├── Makefile
+├── go.mod
+├── go.sum
 └── README.md
 ```
 
