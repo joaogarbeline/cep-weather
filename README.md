@@ -5,11 +5,11 @@ A Go microservice that receives a Brazilian ZIP code (CEP), identifies the city,
 ## 🌐 Live URL (Cloud Run)
 
 > **Replace this with your actual Cloud Run URL after deploying:**
-> `https://cep-weather-XXXXXXXXXX-uc.a.run.app`
+> `https://cep-weather-644768133711.us-central1.run.app/`
 
 Example request:
 ```
-GET https://cep-weather-XXXXXXXXXX-uc.a.run.app/01310100
+GET https://cep-weather-644768133711.us-central1.run.app//01310100
 ```
 
 ---
