@@ -9,7 +9,7 @@ A Go microservice that receives a Brazilian ZIP code (CEP), identifies the city,
 
 Example request:
 ```
-GET https://cep-weather-644768133711.us-central1.run.app//01310100
+GET https://cep-weather-644768133711.us-central1.run.app/01310100
 ```
 
 ---
