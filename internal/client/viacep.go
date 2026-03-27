@@ -54,6 +54,10 @@ func (c *ViaCEPClient) GetLocationByCEP(cep string) (*ViaCEPResponse, error) {
 		return nil, fmt.Errorf("invalid CEP format")
 	}
 
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, nil // CEP not found
+	}
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
